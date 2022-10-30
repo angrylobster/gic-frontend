@@ -2,7 +2,12 @@ import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { EMPLOYEE_COLUMNS } from '../constants';
-import { selectEmployees, getEmployeesStatus, clearEmployeeForm } from '../employeeSlice';
+import {
+  selectEmployees,
+  getEmployeesStatus,
+  clearEmployeeForm,
+  clearEmployeeFormErrors
+} from '../employeeSlice';
 import { EmployeeTable } from '../components/EmployeeTable';
 import { AccountCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
@@ -16,6 +21,7 @@ export function EmployeeList() {
 
   useEffect(() => {
     dispatch(clearEmployeeForm());
+    dispatch(clearEmployeeFormErrors());
   }, []);
 
   return (
