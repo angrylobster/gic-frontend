@@ -3,7 +3,6 @@ import { RootState } from '../../app/store';
 import { httpClient } from './httpClient';
 import { Employee, EmployeeFormErrors, EmployeeState } from './interfaces';
 import { validateEmployee } from './validators';
-import { addNewEmployee, getEmployees } from '../../app/localStorage';
 
 const initialState: EmployeeState = {
   employees: [],
@@ -17,34 +16,30 @@ export const fetchEmployees = createAsyncThunk('employee/fetchEmployees', async 
   return employees;
 });
 
-export const upsertEmployee = createAsyncThunk(
-  'employee/upsertEmployee',
-  async (payload: Omit<Employee, 'id'> & { id?: string }, { rejectWithValue }) => {
-    const errors = validateEmployee(payload);
-    if (Object.values(errors).length) return rejectWithValue(errors);
-    const employees = getEmployees();
-    const existingEmployee = payload.id && employees.find(({ id }) => payload.id === id);
-    if (existingEmployee) {
-      existingEmployee.firstName = payload.firstName;
-      existingEmployee.lastName = payload.lastName;
-      existingEmployee.email = payload.email;
-      existingEmployee.number = payload.number;
-      existingEmployee.gender = payload.gender;
-      return employees;
-    } else {
-      const maxId = Math.max(...employees.map(({ id }) => Number(id)));
-      return addNewEmployee({ ...payload, id: `${maxId + 1}` });
-    }
+export const upsertEmployee = createAsyncThunk<
+  Employee[],
+  Employee,
+  { state: { employee: EmployeeState } }
+>('employee/upsertEmployee', async (payload: Employee, { rejectWithValue, getState }) => {
+  const errors = validateEmployee(payload);
+  if (Object.values(errors).length) return rejectWithValue(errors);
+  const employees = getState().employee.employees;
+  if (payload.id) {
+    return employees.map((employee) => (payload.id === employee.id ? payload : employee));
+  } else {
+    const lastId = Math.max(...employees.map(({ id }) => Number(id)));
+    return [...employees, { ...payload, id: `${lastId + 1}` }];
   }
-);
+});
 
-export const deleteEmployee = createAsyncThunk(
-  'employee/deleteEmployee',
-  async (deletionId: string) => {
-    const employees = getEmployees();
-    return employees.filter(({ id }) => id !== deletionId);
-  }
-);
+export const deleteEmployee = createAsyncThunk<
+  Employee[],
+  string,
+  { state: { employee: EmployeeState } }
+>('employee/deleteEmployee', async (deletionId: string, { getState }) => {
+  const employees = getState().employee.employees;
+  return employees.filter(({ id }) => id !== deletionId);
+});
 
 export const employeeSlice = createSlice({
   name: 'employee',

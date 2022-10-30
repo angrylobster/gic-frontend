@@ -9,14 +9,6 @@ export const getEmployees = (): Employee[] => {
   }
 };
 
-export const addNewEmployee = (employee: Employee): Employee[] => {
-  const employees = getEmployees();
-  employees.push(employee);
-  setEmployees(employees);
-  return employees;
-};
-
 export const setEmployees = (employees: Employee[]) => {
   localStorage.setItem('employees', JSON.stringify(employees));
-  return employees;
 };

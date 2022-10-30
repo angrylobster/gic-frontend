@@ -2,7 +2,7 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import employeeReducer from '../features/employee/employeeSlice';
 import { getEmployees } from './localStorage';
-import { localStorageMiddleware } from './middleware';
+import { rehydrateStore } from './middleware';
 
 export const store = configureStore({
   reducer: {
@@ -18,7 +18,7 @@ export const store = configureStore({
     }
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(localStorageMiddleware);
+    return getDefaultMiddleware().concat(rehydrateStore);
   }
 });
 
