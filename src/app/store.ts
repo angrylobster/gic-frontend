@@ -1,9 +1,24 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
+import employeeReducer from '../features/employee/employeeSlice';
+import { getEmployees } from './localStorage';
+import { localStorageMiddleware } from './middleware';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer
+    counter: counterReducer,
+    employee: employeeReducer
+  },
+  preloadedState: {
+    employee: {
+      employees: getEmployees(),
+      employeeForm: {},
+      employeeFormErrors: {},
+      status: 'idle'
+    }
+  },
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(localStorageMiddleware);
   }
 });
 
