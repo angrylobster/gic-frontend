@@ -17,7 +17,10 @@ export function EmployeeTable({ columns, rows }: EmployeeTableProps) {
   }, [gridApi, status]);
 
   return (
-    <Box className="ag-theme-material" sx={{ height: '600px' }}>
+    <Box
+      className="ag-theme-material"
+      sx={{ height: '80vh', border: '1px solid rgb(226,226,226)' }}
+      m={3}>
       <AgGridReact
         rowData={rows}
         columnDefs={columns}

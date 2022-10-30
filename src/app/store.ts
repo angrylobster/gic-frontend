@@ -1,12 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import employeeReducer from '../features/employee/employeeSlice';
 import { getEmployees } from './localStorage';
 import { rehydrateStore } from './middleware';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     employee: employeeReducer
   },
   preloadedState: {

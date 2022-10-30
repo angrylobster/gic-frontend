@@ -19,8 +19,8 @@ export function EmployeeList() {
   }, []);
 
   return (
-    <Box sx={{ height: '100%' }} p={3}>
-      <Box display="flex" justifyContent="flex-end">
+    <Box sx={{ height: '100%' }}>
+      <Box display="flex" justifyContent="flex-end" p={3}>
         <Button
           color="info"
           variant="outlined"
